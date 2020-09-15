@@ -409,6 +409,28 @@ button,
   }
 }
 
+.dropdown-select__layer.dropdown-select--floating {
+  position: absolute;
+  bottom: 10px;
+  :root[dir="ltr"] & {
+    right: 170px;
+  }
+  :root[dir="rtl"] & {
+    left: 44px;
+  }
+}
+
+.addlayerbutton {
+  position: absolute;
+  bottom: 100px;
+  :root[dir="ltr"] & {
+    right: 170px;
+  }
+  :root[dir="rtl"] & {
+    left: 44px;
+  }
+}
+
 .zIndexButton {
   margin: 0 5px;
   padding: 5px;

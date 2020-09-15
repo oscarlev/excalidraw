@@ -20,6 +20,7 @@ import { UserList } from "./UserList";
 import { LockIcon } from "./LockIcon";
 import { ExportDialog, ExportCB } from "./ExportDialog";
 import { LanguageList } from "./LanguageList";
+import { AddLayor, LayerList } from "./LayerList";
 import { t, languages, setLanguage } from "../i18n";
 import { HintViewer } from "./HintViewer";
 import useIsMobile from "../is-mobile";
@@ -530,6 +531,19 @@ const LayerUI = ({
           }}
           languages={languages}
           floating
+        />
+        <LayerList
+          currentLayerId={appState.currentLayerId}
+          onChange={(layerId) => {
+            //todo:
+            setAppState({ currentLayerId: layerId });
+          }}
+          floating
+        />
+        <AddLayor
+          onChange={() => {
+            //todo:
+          }}
         />
         {actionManager.renderAction("toggleShortcuts")}
       </div>
