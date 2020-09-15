@@ -68,6 +68,7 @@ export const getDefaultAppState = (): Omit<
     width: window.innerWidth,
     height: window.innerHeight,
     isLibraryOpen: false,
+    currentLayerId: "1",
   };
 };
 
@@ -117,6 +118,7 @@ const APP_STATE_STORAGE_CONF = (<
   isBindingEnabled: { browser: false, export: false },
   isCollaborating: { browser: false, export: false },
   isLibraryOpen: { browser: false, export: false },
+  currentLayerId: { browser: false, export: false },
   isLoading: { browser: false, export: false },
   isResizing: { browser: false, export: false },
   isRotating: { browser: false, export: false },

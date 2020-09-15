@@ -94,6 +94,7 @@ export type AppState = {
   offsetLeft: number;
 
   isLibraryOpen: boolean;
+  currentLayerId: string;
 };
 
 export type PointerCoords = Readonly<{

@@ -519,6 +519,10 @@ const LayerUI = ({
           zenModeEnabled && "transition-right disable-pointerEvents"
         }`}
       >
+        <div>
+          {t("labels.currentLayer")}
+          {appState.currentLayerId}
+        </div>
         <LanguageList
           onChange={async (lng) => {
             await setLanguage(lng);
