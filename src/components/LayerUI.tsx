@@ -534,6 +534,7 @@ const LayerUI = ({
         />
         <LayerList
           currentLayerId={appState.currentLayerId}
+          layers={appState.layers}
           onChange={(layerId) => {
             //todo:
             setAppState({ currentLayerId: layerId });
@@ -541,8 +542,12 @@ const LayerUI = ({
           floating
         />
         <AddLayor
-          onChange={() => {
-            //todo:
+          onClick={() => {
+            const newLayer = {
+              id: (appState.layers.length + 1).toString(),
+              label: `Layer ${appState.layers.length + 1}`,
+            };
+            setAppState({ layers: [...appState.layers, newLayer] });
           }}
         />
         {actionManager.renderAction("toggleShortcuts")}

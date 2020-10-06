@@ -422,9 +422,10 @@ button,
 
 .addlayerbutton {
   position: absolute;
-  bottom: 100px;
+  bottom: 15px;
+
   :root[dir="ltr"] & {
-    right: 170px;
+    right: 250px;
   }
   :root[dir="rtl"] & {
     left: 44px;

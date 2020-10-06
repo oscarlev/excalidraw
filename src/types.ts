@@ -94,6 +94,7 @@ export type AppState = {
   offsetLeft: number;
 
   isLibraryOpen: boolean;
+  layers: Layer[];
   currentLayerId: string;
 };
 
@@ -133,4 +134,9 @@ export interface ExcalidrawProps {
     name?: string | null;
   };
   onUsernameChange?: (username: string) => void;
+}
+
+export interface Layer {
+  id: string;
+  label: string;
 }

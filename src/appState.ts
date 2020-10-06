@@ -69,6 +69,7 @@ export const getDefaultAppState = (): Omit<
     height: window.innerHeight,
     isLibraryOpen: false,
     currentLayerId: "1",
+    layers: [{ id: "1", label: "Layer 1" }],
   };
 };
 
@@ -145,6 +146,7 @@ const APP_STATE_STORAGE_CONF = (<
   zoom: { browser: true, export: false },
   offsetTop: { browser: false, export: false },
   offsetLeft: { browser: false, export: false },
+  layers: { browser: false, export: false },
 });
 
 const _clearAppStateForStorage = <ExportType extends "export" | "browser">(
