@@ -255,7 +255,6 @@ export const renderScene = (
       normalizedCanvasWidth,
       normalizedCanvasHeight,
       sceneState,
-      appState.currentLayerId,
     ),
   );
 
@@ -761,12 +760,7 @@ const isVisibleElement = (
     scrollY: FlooredNumber;
     zoom: number;
   },
-  layerId: string,
 ) => {
-  if (element.layerId !== layerId) {
-    return false;
-  }
-
   const [x1, y1, x2, y2] = getElementBounds(element);
 
   // Apply zoom

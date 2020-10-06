@@ -43,10 +43,6 @@ export const hitTest = (
   x: number,
   y: number,
 ): boolean => {
-  if (element.layerId !== appState.currentLayerId) {
-    return false;
-  }
-
   // How many pixels off the shape boundary we still consider a hit
   const threshold = 10 / appState.zoom;
   const point: Point = [x, y];

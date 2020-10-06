@@ -147,7 +147,7 @@ export class LinearElementEditor {
               ),
             ),
             Scene.getScene(element)!,
-            appState.currentLayerId,
+            element.layerId,
           )
         : null;
       binding = {
@@ -213,7 +213,7 @@ export class LinearElementEditor {
           endBindingElement: getHoveredElementForBinding(
             scenePointer,
             Scene.getScene(element)!,
-            appState.currentLayerId,
+            element.layerId,
           ),
         },
       });
