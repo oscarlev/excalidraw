@@ -336,7 +336,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
           appState={this.state}
           setAppState={this.setAppState}
           actionManager={this.actionManager}
-          elements={this.scene.getElements()}
+          elements={this.scene.getElements(this.state.currentLayerId)}
           onRoomCreate={this.openPortal}
           onRoomDestroy={this.closePortal}
           onUsernameChange={(username) => {
@@ -708,7 +708,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
         );
       } catch {}
     }
-    if (this.state.isCollaborating && this.scene.getElements().length > 0) {
+    if (this.state.isCollaborating && this.scene.getAllElements().length > 0) {
       event.preventDefault();
       // NOTE: modern browsers no longer allow showing a custom message here
       event.returnValue = "";
@@ -800,7 +800,9 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       );
       cursorButton[socketId] = user.button;
     });
-    const elements = this.scene.getElements();
+
+    const elements = this.scene.getElements(this.state.currentLayerId);
+
     const { atLeastOneVisibleElement, scrollBars } = renderScene(
       elements.filter((element) => {
         // don't render text element that's being currently edited (it's
@@ -878,11 +880,14 @@ class App extends React.Component<ExcalidrawProps, AppState> {
   });
 
   private copyAll = () => {
-    copyToClipboard(this.scene.getElements(), this.state);
+    copyToClipboard(
+      this.scene.getElements(this.state.currentLayerId),
+      this.state,
+    );
   };
 
   private copyToClipboardAsPng = () => {
-    const elements = this.scene.getElements();
+    const elements = this.scene.getElements(this.state.currentLayerId);
 
     const selectedElements = getSelectedElements(elements, this.state);
     exportCanvas(
@@ -896,12 +901,14 @@ class App extends React.Component<ExcalidrawProps, AppState> {
 
   private copyToClipboardAsSvg = () => {
     const selectedElements = getSelectedElements(
-      this.scene.getElements(),
+      this.scene.getElements(this.state.currentLayerId),
       this.state,
     );
     exportCanvas(
       "clipboard-svg",
-      selectedElements.length ? selectedElements : this.scene.getElements(),
+      selectedElements.length
+        ? selectedElements
+        : this.scene.getElements(this.state.currentLayerId),
       this.state,
       this.canvas!,
       this.state,
@@ -1046,7 +1053,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
           }, {} as any),
           selectedGroupIds: {},
         },
-        this.scene.getElements(),
+        this.scene.getElements(this.state.currentLayerId),
       ),
     );
   };
@@ -1504,7 +1511,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
           : ELEMENT_TRANSLATE_AMOUNT);
 
       const selectedElements = this.scene
-        .getElements()
+        .getElements(this.state.currentLayerId)
         .filter((element) => this.state.selectedElementIds[element.id]);
 
       let offsetX = 0;
@@ -1536,7 +1543,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       event.preventDefault();
     } else if (event.key === KEYS.ENTER) {
       const selectedElements = getSelectedElements(
-        this.scene.getElements(),
+        this.scene.getElements(this.state.currentLayerId),
         this.state,
       );
 
@@ -1606,7 +1613,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     }
     if (isArrowKey(event.key)) {
       const selectedElements = getSelectedElements(
-        this.scene.getElements(),
+        this.scene.getElements(this.state.currentLayerId),
         this.state,
       );
       isBindingEnabled(this.state)
@@ -1717,7 +1724,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
             },
           }));
         } else {
-          fixBindingsAfterDeletion(this.scene.getElements(), [element]);
+          fixBindingsAfterDeletion(
+            this.scene.getElements(this.state.currentLayerId),
+            [element],
+          );
         }
         if (!isDeleted || isExistingElement) {
           history.resumeRecording();
@@ -1786,8 +1796,9 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     x: number,
     y: number,
   ): NonDeleted<ExcalidrawElement>[] {
-    return getElementsAtPosition(this.scene.getElements(), (element) =>
-      hitTest(element, this.state, x, y),
+    return getElementsAtPosition(
+      this.scene.getElements(this.state.currentLayerId),
+      (element) => hitTest(element, this.state, x, y),
     );
   }
 
@@ -1890,7 +1901,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     }
 
     const selectedElements = getSelectedElements(
-      this.scene.getElements(),
+      this.scene.getElements(this.state.currentLayerId),
       this.state,
     );
 
@@ -1937,7 +1948,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
               selectedElementIds: { [hitElement!.id]: true },
               selectedGroupIds: {},
             },
-            this.scene.getElements(),
+            this.scene.getElements(this.state.currentLayerId),
           ),
         );
         return;
@@ -2120,7 +2131,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       return;
     }
 
-    const elements = this.scene.getElements();
+    const elements = this.scene.getElements(this.state.currentLayerId);
 
     const selectedElements = getSelectedElements(elements, this.state);
     if (
@@ -2433,7 +2444,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       window.devicePixelRatio,
     );
     const selectedElements = getSelectedElements(
-      this.scene.getElements(),
+      this.scene.getElements(this.state.currentLayerId),
       this.state,
     );
     const [minX, minY, maxX, maxY] = getCommonBounds(selectedElements);
@@ -2450,14 +2461,16 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       ),
       // we need to duplicate because we'll be updating this state
       lastCoords: { ...origin },
-      originalElements: this.scene.getElements().reduce((acc, element) => {
-        acc.set(element.id, {
-          x: element.x,
-          y: element.y,
-          angle: element.angle,
-        });
-        return acc;
-      }, new Map() as PointerDownState["originalElements"]),
+      originalElements: this.scene
+        .getElements(this.state.currentLayerId)
+        .reduce((acc, element) => {
+          acc.set(element.id, {
+            x: element.x,
+            y: element.y,
+            angle: element.angle,
+          });
+          return acc;
+        }, new Map() as PointerDownState["originalElements"]),
       resize: {
         handleType: false,
         isResizing: false,
@@ -2545,7 +2558,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     pointerDownState: PointerDownState,
   ): boolean => {
     if (this.state.elementType === "selection") {
-      const elements = this.scene.getElements();
+      const elements = this.scene.getElements(this.state.currentLayerId);
       const selectedElements = getSelectedElements(elements, this.state);
       if (selectedElements.length === 1 && !this.state.editingLinearElement) {
         const elementWithTransformHandleType = getElementWithTransformHandleType(
@@ -2686,7 +2699,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
                       [hitElement.id]: true,
                     },
                   },
-                  this.scene.getElements(),
+                  this.scene.getElements(this.state.currentLayerId),
                 );
               });
               pointerDownState.hit.wasAddedToSelection = true;
@@ -2829,6 +2842,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       const boundElement = getHoveredElementForBinding(
         pointerDownState.origin,
         this.scene,
+        this.state.currentLayerId,
       );
       this.scene.replaceAllElements([
         ...this.scene.getElementsIncludingDeleted(),
@@ -2896,7 +2910,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       if (pointerDownState.drag.offset === null) {
         pointerDownState.drag.offset = tupleToCoors(
           getDragOffsetXY(
-            getSelectedElements(this.scene.getElements(), this.state),
+            getSelectedElements(
+              this.scene.getElements(this.state.currentLayerId),
+              this.state,
+            ),
             pointerDownState.origin.x,
             pointerDownState.origin.y,
           ),
@@ -2947,7 +2964,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
 
       if (pointerDownState.resize.isResizing) {
         const selectedElements = getSelectedElements(
-          this.scene.getElements(),
+          this.scene.getElements(this.state.currentLayerId),
           this.state,
         );
         const transformHandleType = pointerDownState.resize.handleType;
@@ -3019,7 +3036,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
         // if elements should be deselected on pointerup
         pointerDownState.drag.hasOccurred = true;
         const selectedElements = getSelectedElements(
-          this.scene.getElements(),
+          this.scene.getElements(this.state.currentLayerId),
           this.state,
         );
         if (selectedElements.length > 0) {
@@ -3187,7 +3204,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       }
 
       if (this.state.elementType === "selection") {
-        const elements = this.scene.getElements();
+        const elements = this.scene.getElements(this.state.currentLayerId);
         if (!event.shiftKey && isSomeElementSelected(elements, this.state)) {
           this.setState({
             selectedElementIds: {},
@@ -3211,7 +3228,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
                 }, {} as any),
               },
             },
-            this.scene.getElements(),
+            this.scene.getElements(this.state.currentLayerId),
           ),
         );
       }
@@ -3422,7 +3439,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
               //  hitElement is part of
               const idsOfSelectedElementsThatAreInGroups = hitElement.groupIds
                 .flatMap((groupId) =>
-                  getElementsInGroup(this.scene.getElements(), groupId),
+                  getElementsInGroup(
+                    this.scene.getElements(this.state.currentLayerId),
+                    groupId,
+                  ),
                 )
                 .map((element) => ({ [element.id]: false }))
                 .reduce((prevId, acc) => ({ ...prevId, ...acc }), {});
@@ -3466,7 +3486,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
                 ...prevState,
                 selectedElementIds: { [hitElement.id]: true },
               },
-              this.scene.getElements(),
+              this.scene.getElements(this.state.currentLayerId),
             ),
           }));
         }
@@ -3507,7 +3527,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
 
       if (
         elementType !== "selection" ||
-        isSomeElementSelected(this.scene.getElements(), this.state)
+        isSomeElementSelected(
+          this.scene.getElements(this.state.currentLayerId),
+          this.state,
+        )
       ) {
         history.resumeRecording();
       }
@@ -3516,7 +3539,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
         (isBindingEnabled(this.state)
           ? bindOrUnbindSelectedElements
           : unbindLinearElements)(
-          getSelectedElements(this.scene.getElements(), this.state),
+          getSelectedElements(
+            this.scene.getElements(this.state.currentLayerId),
+            this.state,
+          ),
         );
       }
 
@@ -3552,6 +3578,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     const hoveredBindableElement = getHoveredElementForBinding(
       pointerCoords,
       this.scene,
+      this.state.currentLayerId,
     );
     this.setState({
       suggestedBindings:
@@ -3573,6 +3600,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     const hoveredBindableElement = getHoveredElementForBinding(
       pointerCoords,
       this.scene,
+      linearElement.layerId,
     );
     this.setState({
       suggestedBindings:
@@ -3719,7 +3747,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       window.devicePixelRatio,
     );
 
-    const elements = this.scene.getElements();
+    const elements = this.scene.getElements(this.state.currentLayerId);
     const element = this.getElementAtPosition(x, y);
     if (!element) {
       ContextMenu.push({

@@ -58,7 +58,11 @@ class Scene {
   }
 
   // TODO: getAllNonDeletedElements
-  getElements(): readonly NonDeletedExcalidrawElement[] {
+  getElements(layerId: string): readonly NonDeletedExcalidrawElement[] {
+    return this.nonDeletedElements.filter((e) => e.layerId === layerId);
+  }
+
+  getAllElements(): readonly NonDeletedExcalidrawElement[] {
     return this.nonDeletedElements;
   }
 

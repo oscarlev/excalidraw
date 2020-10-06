@@ -536,6 +536,7 @@ const LayerUI = ({
           currentLayerId={appState.currentLayerId}
           layers={appState.layers}
           onChange={(layerId) => {
+            deselectItems();
             setAppState({ currentLayerId: layerId });
           }}
           floating

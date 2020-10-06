@@ -157,7 +157,11 @@ export const maybeBindLinearElement = (
   if (appState.startBoundElement != null) {
     bindLinearElement(linearElement, appState.startBoundElement, "start");
   }
-  const hoveredElement = getHoveredElementForBinding(pointerCoords, scene);
+  const hoveredElement = getHoveredElementForBinding(
+    pointerCoords,
+    scene,
+    appState.currentLayerId,
+  );
   if (
     hoveredElement != null &&
     !isLinearElementSimpleAndAlreadyBoundOnOppositeEdge(
@@ -242,9 +246,10 @@ export const getHoveredElementForBinding = (
     y: number;
   },
   scene: Scene,
+  currentLayerId: string,
 ): NonDeleted<ExcalidrawBindableElement> | null => {
   const hoveredElement = getElementAtPosition(
-    scene.getElements(),
+    scene.getElements(currentLayerId),
     (element) =>
       isBindableElement(element) && bindingBorderTest(element, pointerCoords),
   );
@@ -467,6 +472,7 @@ const getElligibleElementForBindingElement = (
   return getHoveredElementForBinding(
     getLinearElementEdgeCoors(linearElement, startOrEnd),
     Scene.getScene(linearElement)!,
+    linearElement.layerId,
   );
 };
 
@@ -484,7 +490,7 @@ const getElligibleElementsForBindableElementAndWhere = (
   bindableElement: NonDeleted<ExcalidrawBindableElement>,
 ): SuggestedPointBinding[] => {
   return Scene.getScene(bindableElement)!
-    .getElements()
+    .getElements(bindableElement.layerId)
     .map((element) => {
       if (!isBindingElement(element)) {
         return null;
