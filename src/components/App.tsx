@@ -801,6 +801,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       cursorButton[socketId] = user.button;
     });
     const elements = this.scene.getElements();
+    const layerElements = this.scene.getLayerElements(
+      this.state.currentLayerId,
+    );
+
     const { atLeastOneVisibleElement, scrollBars } = renderScene(
       elements.filter((element) => {
         // don't render text element that's being currently edited (it's
@@ -838,7 +842,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       // hide when editing text
       this.state.editingElement?.type === "text"
         ? false
-        : !atLeastOneVisibleElement && elements.length > 0;
+        : !atLeastOneVisibleElement && layerElements.length > 0;
     if (this.state.scrolledOutside !== scrolledOutside) {
       this.setState({ scrolledOutside: scrolledOutside });
     }
