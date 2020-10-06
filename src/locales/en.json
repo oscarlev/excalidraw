@@ -73,7 +73,9 @@
     "removeFromLibrary": "Remove from library",
     "libraryLoadingMessage": "Loading library...",
     "loadingScene": "Loading scene...",
-    "currentLayer": "Current layer"
+    "currentLayer": "Current layer",
+    "layerName": "Layer name",
+    "layerDialogTitle": "Enter layer name"
   },
   "buttons": {
     "clearReset": "Reset the canvas",
@@ -102,7 +104,9 @@
     "toggleFullScreen": "Toggle full screen",
     "toggleDarkMode": "Toggle dark mode",
     "toggleZenMode": "Toggle zen mode",
-    "exitZenMode": "Exit zen mode"
+    "exitZenMode": "Exit zen mode",
+    "addLayer": "Add layer",
+    "removeLayer": "Remove layer"
   },
   "alerts": {
     "clearReset": "This will clear the whole canvas. Are you sure?",
@@ -113,7 +117,9 @@
     "couldNotCopyToClipboard": "Couldn't copy to clipboard. Try using Chrome browser.",
     "decryptFailed": "Couldn't decrypt data.",
     "uploadedSecurly": "The upload has been secured with end-to-end encryption, which means that Excalidraw server and third parties can't read the content.",
-    "loadSceneOverridePrompt": "Loading external drawing will replace your existing content. Do you wish to continue?"
+    "loadSceneOverridePrompt": "Loading external drawing will replace your existing content. Do you wish to continue?",
+    "removeLastLayer": "You cant remove the last layer",
+    "confirmRemoveLayer": "Are you sure you want to remove the current layer?"
   },
   "toolBar": {
     "selection": "Selection",

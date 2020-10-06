@@ -20,7 +20,9 @@ import { UserList } from "./UserList";
 import { LockIcon } from "./LockIcon";
 import { ExportDialog, ExportCB } from "./ExportDialog";
 import { LanguageList } from "./LanguageList";
-import { AddLayor, LayerList } from "./LayerList";
+import { LayerList } from "./LayerList";
+import { trash, clone } from "../components/icons";
+
 import { t, languages, setLanguage } from "../i18n";
 import { HintViewer } from "./HintViewer";
 import useIsMobile from "../is-mobile";
@@ -45,6 +47,8 @@ import { ToolButton } from "./ToolButton";
 import { saveLibraryAsJSON, importLibraryFromJSON } from "../data/json";
 import { muteFSAbortError } from "../utils";
 import { BackgroundPickerAndDarkModeToggle } from "./BackgroundPickerAndDarkModeToggle";
+import { randomId } from "../random";
+import { Dialog } from "./Dialog";
 
 interface LayerUIProps {
   actionManager: ActionManager;
@@ -291,7 +295,7 @@ const LayerUI = ({
   toggleZenMode,
 }: LayerUIProps) => {
   const isMobile = useIsMobile();
-
+  const [newLayerModalIsShown, setNewLayerModalIsShown] = useState(false);
   // TODO: Extend tooltip component and use here.
   const renderEncryptedIcon = () => (
     <a
@@ -520,10 +524,6 @@ const LayerUI = ({
           zenModeEnabled && "transition-right disable-pointerEvents"
         }`}
       >
-        <div>
-          {t("labels.currentLayer")}
-          {appState.currentLayerId}
-        </div>
         <LanguageList
           onChange={async (lng) => {
             await setLanguage(lng);
@@ -536,18 +536,56 @@ const LayerUI = ({
           currentLayerId={appState.currentLayerId}
           layers={appState.layers}
           onChange={(layerId) => {
-            //todo:
             setAppState({ currentLayerId: layerId });
           }}
           floating
         />
-        <AddLayor
+        {newLayerModalIsShown && (
+          <NewLayerDialog
+            onAdd={(name) => {
+              const newLayer = {
+                id: randomId(),
+                label: name,
+              };
+              setAppState({ layers: [...appState.layers, newLayer] });
+              setNewLayerModalIsShown(false);
+            }}
+            onClose={() => setNewLayerModalIsShown(false)}
+          />
+        )}
+        <ToolButton
+          type="button"
+          icon={clone}
+          title={t("buttons.addLayer")}
+          aria-label={t("buttons.addLayer")}
+          className="addlayerbutton"
           onClick={() => {
-            const newLayer = {
-              id: (appState.layers.length + 1).toString(),
-              label: `Layer ${appState.layers.length + 1}`,
-            };
-            setAppState({ layers: [...appState.layers, newLayer] });
+            setNewLayerModalIsShown(true);
+          }}
+        />
+        <ToolButton
+          type="button"
+          icon={trash}
+          title={t("buttons.removeLayer")}
+          aria-label={t("buttons.removeLayer")}
+          className="removelayerbutton"
+          onClick={() => {
+            if (appState.layers.length < 2) {
+              window.alert(t("alerts.removeLastLayer"));
+              return;
+            }
+
+            if (window.confirm(t("alerts.confirmRemoveLayer"))) {
+              (window as any).handle = null;
+              const newLayersList = appState.layers.filter(
+                (layer) => layer.id !== appState.currentLayerId,
+              );
+
+              setAppState({
+                layers: newLayersList,
+                currentLayerId: newLayersList[0].id,
+              });
+            }
           }}
         />
         {actionManager.renderAction("toggleShortcuts")}
@@ -639,6 +677,44 @@ const areEqual = (prev: LayerUIProps, next: LayerUIProps) => {
     prev.lng === next.lng &&
     prev.elements === next.elements &&
     keys.every((key) => prevAppState[key] === nextAppState[key])
+  );
+};
+
+const NewLayerDialog = ({
+  onAdd,
+  onClose,
+}: {
+  onAdd: (name: string) => void;
+  onClose: () => void;
+}) => {
+  const [name, setName] = useState("");
+  return (
+    <Dialog
+      maxWidth={500}
+      onCloseRequest={onClose}
+      title={t("labels.layerDialogTitle")}
+    >
+      <div className="RoomDialog-usernameContainer">
+        <label className="RoomDialog-usernameLabel" htmlFor="username">
+          {t("labels.layerName")}
+        </label>
+        <input
+          id="layername"
+          value={name}
+          className="RoomDialog-username TextInput"
+          onChange={(event) => setName(event.target.value)}
+        />
+        <button
+          type="button"
+          title={t("buttons.addLayer")}
+          aria-label={t("buttons.addLayer")}
+          style={{ width: "50", height: "50px", marginLeft: "5px" }}
+          onClick={() => onAdd(name)}
+        >
+          {t("buttons.addLayer")}
+        </button>
+      </div>
+    </Dialog>
   );
 };
 

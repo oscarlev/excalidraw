@@ -26,9 +26,3 @@ export const LayerList = ({
     ))}
   </select>
 );
-
-export const AddLayor = ({ onClick }: { onClick: () => void }) => (
-  <button className="addlayerbutton" onClick={() => onClick()}>
-    +
-  </button>
-);
