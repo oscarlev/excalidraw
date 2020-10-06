@@ -1610,7 +1610,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
         this.state,
       );
       isBindingEnabled(this.state)
-        ? bindOrUnbindSelectedElements(selectedElements)
+        ? bindOrUnbindSelectedElements(
+            selectedElements,
+            this.state.currentLayerId,
+          )
         : unbindLinearElements(selectedElements);
       this.setState({ suggestedBindings: [] });
     }
@@ -2829,6 +2832,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       const boundElement = getHoveredElementForBinding(
         pointerDownState.origin,
         this.scene,
+        this.state.currentLayerId,
       );
       this.scene.replaceAllElements([
         ...this.scene.getElementsIncludingDeleted(),
@@ -3518,6 +3522,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
           ? bindOrUnbindSelectedElements
           : unbindLinearElements)(
           getSelectedElements(this.scene.getElements(), this.state),
+          this.state.currentLayerId,
         );
       }
 
@@ -3553,6 +3558,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     const hoveredBindableElement = getHoveredElementForBinding(
       pointerCoords,
       this.scene,
+      this.state.currentLayerId,
     );
     this.setState({
       suggestedBindings:
@@ -3574,6 +3580,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     const hoveredBindableElement = getHoveredElementForBinding(
       pointerCoords,
       this.scene,
+      this.state.currentLayerId,
     );
     this.setState({
       suggestedBindings:
@@ -3591,7 +3598,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
   private maybeSuggestBindingForAll(
     selectedElements: NonDeleted<ExcalidrawElement>[],
   ): void {
-    const suggestedBindings = getEligibleElementsForBinding(selectedElements);
+    const suggestedBindings = getEligibleElementsForBinding(
+      selectedElements,
+      this.state.currentLayerId,
+    );
     this.setState({ suggestedBindings });
   }
 

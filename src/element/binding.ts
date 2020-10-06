@@ -120,13 +120,14 @@ const bindOrUnbindLinearElementEdge = (
 
 export const bindOrUnbindSelectedElements = (
   elements: NonDeleted<ExcalidrawElement>[],
+  currentLayerId: string,
 ): void => {
   elements.forEach((element) => {
     if (isBindingElement(element)) {
       bindOrUnbindLinearElement(
         element,
-        getElligibleElementForBindingElement(element, "start"),
-        getElligibleElementForBindingElement(element, "end"),
+        getElligibleElementForBindingElement(element, "start", currentLayerId),
+        getElligibleElementForBindingElement(element, "end", currentLayerId),
       );
     } else if (isBindableElement(element)) {
       maybeBindBindableElement(element);
@@ -157,7 +158,11 @@ export const maybeBindLinearElement = (
   if (appState.startBoundElement != null) {
     bindLinearElement(linearElement, appState.startBoundElement, "start");
   }
-  const hoveredElement = getHoveredElementForBinding(pointerCoords, scene);
+  const hoveredElement = getHoveredElementForBinding(
+    pointerCoords,
+    scene,
+    appState.currentLayerId,
+  );
   if (
     hoveredElement != null &&
     !isLinearElementSimpleAndAlreadyBoundOnOppositeEdge(
@@ -242,8 +247,10 @@ export const getHoveredElementForBinding = (
     y: number;
   },
   scene: Scene,
+  currentLayerId: string,
 ): NonDeleted<ExcalidrawBindableElement> | null => {
   const hoveredElement = getElementAtPosition(
+    currentLayerId,
     scene.getElements(),
     (element) =>
       isBindableElement(element) && bindingBorderTest(element, pointerCoords),
@@ -431,12 +438,14 @@ const maybeCalculateNewGapWhenScaling = (
 
 export const getEligibleElementsForBinding = (
   elements: NonDeleted<ExcalidrawElement>[],
+  currentLayerId: string,
 ): SuggestedBinding[] => {
   const includedElementIds = new Set(elements.map(({ id }) => id));
   return elements.flatMap((element) =>
     isBindingElement(element)
       ? (getElligibleElementsForBindingElement(
           element as NonDeleted<ExcalidrawLinearElement>,
+          currentLayerId,
         ).filter(
           (element) => !includedElementIds.has(element.id),
         ) as SuggestedBinding[])
@@ -450,10 +459,15 @@ export const getEligibleElementsForBinding = (
 
 const getElligibleElementsForBindingElement = (
   linearElement: NonDeleted<ExcalidrawLinearElement>,
+  currentLayerId: string,
 ): NonDeleted<ExcalidrawBindableElement>[] => {
   return [
-    getElligibleElementForBindingElement(linearElement, "start"),
-    getElligibleElementForBindingElement(linearElement, "end"),
+    getElligibleElementForBindingElement(
+      linearElement,
+      "start",
+      currentLayerId,
+    ),
+    getElligibleElementForBindingElement(linearElement, "end", currentLayerId),
   ].filter(
     (element): element is NonDeleted<ExcalidrawBindableElement> =>
       element != null,
@@ -463,10 +477,12 @@ const getElligibleElementsForBindingElement = (
 const getElligibleElementForBindingElement = (
   linearElement: NonDeleted<ExcalidrawLinearElement>,
   startOrEnd: "start" | "end",
+  currentLayerId: string,
 ): NonDeleted<ExcalidrawBindableElement> | null => {
   return getHoveredElementForBinding(
     getLinearElementEdgeCoors(linearElement, startOrEnd),
     Scene.getScene(linearElement)!,
+    currentLayerId,
   );
 };
 

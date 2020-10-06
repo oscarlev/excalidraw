@@ -29,6 +29,7 @@ export const canChangeSharpness = (type: string) =>
 export const hasText = (type: string) => type === "text";
 
 export const getElementAtPosition = (
+  currentLayerId: string,
   elements: readonly NonDeletedExcalidrawElement[],
   isAtPositionFn: (element: NonDeletedExcalidrawElement) => boolean,
 ) => {
@@ -38,7 +39,7 @@ export const getElementAtPosition = (
   // with higher z-index
   for (let i = elements.length - 1; i >= 0; --i) {
     const element = elements[i];
-    if (element.isDeleted) {
+    if (element.isDeleted || element.layerId !== currentLayerId) {
       continue;
     }
     if (isAtPositionFn(element)) {
