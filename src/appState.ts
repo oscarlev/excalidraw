@@ -146,7 +146,7 @@ const APP_STATE_STORAGE_CONF = (<
   zoom: { browser: true, export: false },
   offsetTop: { browser: false, export: false },
   offsetLeft: { browser: false, export: false },
-  layers: { browser: false, export: false },
+  layers: { browser: true, export: true },
 });
 
 const _clearAppStateForStorage = <ExportType extends "export" | "browser">(
