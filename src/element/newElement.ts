@@ -48,6 +48,7 @@ const _newElementBase = <T extends ExcalidrawElement>(
     groupIds = [],
     strokeSharpness,
     boundElementIds = null,
+    layerId,
     ...rest
   }: ElementConstructorOpts & Omit<Partial<ExcalidrawGenericElement>, "type">,
 ) => ({
@@ -72,6 +73,7 @@ const _newElementBase = <T extends ExcalidrawElement>(
   versionNonce: rest.versionNonce ?? 0,
   isDeleted: false as false,
   boundElementIds,
+  layerId,
 });
 
 export const newElement = (

@@ -66,6 +66,7 @@ export class API {
     strokeSharpness?: ExcalidrawGenericElement["strokeSharpness"];
     roughness?: ExcalidrawGenericElement["roughness"];
     opacity?: ExcalidrawGenericElement["opacity"];
+    layerId?: ExcalidrawGenericElement["layerId"];
     // text props
     text?: T extends "text" ? ExcalidrawTextElement["text"] : never;
     fontSize?: T extends "text" ? ExcalidrawTextElement["fontSize"] : never;
@@ -96,6 +97,7 @@ export class API {
         rest.strokeSharpness ?? appState.currentItemStrokeSharpness,
       roughness: rest.roughness ?? appState.currentItemRoughness,
       opacity: rest.opacity ?? appState.currentItemOpacity,
+      layerId: rest.layerId ?? appState.currentLayerId,
     };
     switch (type) {
       case "rectangle":

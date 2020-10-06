@@ -174,6 +174,7 @@ export function renderSpreadsheet(
     fontFamily: appState.currentItemFontFamily,
     textAlign: appState.currentItemTextAlign,
     verticalAlign: DEFAULT_VERTICAL_ALIGN,
+    layerId: appState.currentLayerId,
   });
 
   const maxYLabel = newTextElement({
@@ -192,6 +193,7 @@ export function renderSpreadsheet(
     fontFamily: appState.currentItemFontFamily,
     textAlign: appState.currentItemTextAlign,
     verticalAlign: DEFAULT_VERTICAL_ALIGN,
+    layerId: appState.currentLayerId,
   });
 
   const bars = spreadsheet.values.map((value, i) => {
@@ -214,6 +216,7 @@ export function renderSpreadsheet(
       roughness: appState.currentItemRoughness,
       opacity: appState.currentItemOpacity,
       strokeSharpness: appState.currentItemStrokeSharpness,
+      layerId: appState.currentLayerId,
     });
   });
 
@@ -240,6 +243,7 @@ export function renderSpreadsheet(
         verticalAlign: DEFAULT_VERTICAL_ALIGN,
         width: BAR_WIDTH,
         angle: ANGLE,
+        layerId: appState.currentLayerId,
       });
     }) || [];
 
@@ -262,6 +266,7 @@ export function renderSpreadsheet(
         verticalAlign: DEFAULT_VERTICAL_ALIGN,
         width: BAR_WIDTH,
         angle: ANGLE,
+        layerId: appState.currentLayerId,
       })
     : null;
 

@@ -23,6 +23,7 @@ type _ExcalidrawElementBase = Readonly<{
   versionNonce: number;
   isDeleted: boolean;
   groupIds: readonly GroupId[];
+  layerId: string;
   boundElementIds: readonly ExcalidrawLinearElement["id"][] | null;
 }>;
 

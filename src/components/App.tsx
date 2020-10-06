@@ -1075,6 +1075,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       fontFamily: this.state.currentItemFontFamily,
       textAlign: this.state.currentItemTextAlign,
       verticalAlign: DEFAULT_VERTICAL_ALIGN,
+      layerId: this.state.currentLayerId,
     });
 
     this.scene.replaceAllElements([
@@ -1840,6 +1841,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
           verticalAlign: parentCenterPosition
             ? "middle"
             : DEFAULT_VERTICAL_ALIGN,
+          layerId: this.state.currentLayerId,
         });
 
     this.setState({ editingElement: element });
@@ -2813,6 +2815,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
         roughness: this.state.currentItemRoughness,
         opacity: this.state.currentItemOpacity,
         strokeSharpness: this.state.currentItemLinearStrokeSharpness,
+        layerId: this.state.currentLayerId,
       });
       this.setState((prevState) => ({
         selectedElementIds: {
@@ -2861,6 +2864,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
       roughness: this.state.currentItemRoughness,
       opacity: this.state.currentItemOpacity,
       strokeSharpness: this.state.currentItemStrokeSharpness,
+      layerId: this.state.currentLayerId,
     });
 
     if (element.type === "selection") {

@@ -166,5 +166,6 @@ const getWatermarkElement = (maxX: number, maxY: number) => {
     roughness: 1,
     opacity: 100,
     strokeSharpness: "sharp",
+    layerId: "",
   });
 };

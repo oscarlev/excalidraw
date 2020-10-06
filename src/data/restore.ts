@@ -54,6 +54,7 @@ function migrateElementWithProperties<T extends ExcalidrawElement>(
       element.strokeSharpness ??
       (isLinearElementType(element.type) ? "round" : "sharp"),
     boundElementIds: element.boundElementIds ?? [],
+    layerId: element.layerId ?? "1",
   };
 
   return {
