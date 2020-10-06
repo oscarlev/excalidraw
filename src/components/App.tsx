@@ -1178,7 +1178,10 @@ class App extends React.Component<ExcalidrawProps, AppState> {
         decryptedData: SocketUpdateDataSource[SCENE.INIT | SCENE.UPDATE],
         { init = false }: { init?: boolean } = {},
       ) => {
-        const { elements: remoteElements } = decryptedData.payload;
+        const {
+          elements: remoteElements,
+          layers: remoteLayers,
+        } = decryptedData.payload;
 
         if (init) {
           history.resumeRecording();
@@ -1191,6 +1194,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
               this.state,
               this.canvas,
             ),
+            layers: remoteLayers,
           });
         }
 
@@ -1424,6 +1428,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
     const data: SocketUpdateDataSource[typeof sceneType] = {
       type: sceneType,
       payload: {
+        layers: this.state.layers,
         elements: syncableElements,
       },
     };

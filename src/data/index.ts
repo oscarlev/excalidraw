@@ -5,7 +5,7 @@ import {
 
 import { getDefaultAppState } from "../appState";
 
-import { AppState } from "../types";
+import { AppState, Layer } from "../types";
 import { exportToCanvas, exportToSvg } from "../scene/export";
 import { fileSave } from "browser-nativefs";
 
@@ -39,12 +39,14 @@ export type SocketUpdateDataSource = {
   SCENE_INIT: {
     type: "SCENE_INIT";
     payload: {
+      layers: Layer[];
       elements: readonly ExcalidrawElement[];
     };
   };
   SCENE_UPDATE: {
     type: "SCENE_UPDATE";
     payload: {
+      layers: Layer[];
       elements: readonly ExcalidrawElement[];
     };
   };
