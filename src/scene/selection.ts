@@ -8,6 +8,7 @@ import { AppState } from "../types";
 export const getElementsWithinSelection = (
   elements: readonly NonDeletedExcalidrawElement[],
   selection: NonDeletedExcalidrawElement,
+  currentLayerId: string,
 ) => {
   const [
     selectionX1,
@@ -21,6 +22,7 @@ export const getElementsWithinSelection = (
     );
 
     return (
+      element.layerId === currentLayerId &&
       element.type !== "selection" &&
       selectionX1 <= elementX1 &&
       selectionY1 <= elementY1 &&

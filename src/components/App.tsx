@@ -3198,6 +3198,7 @@ class App extends React.Component<ExcalidrawProps, AppState> {
         const elementsWithinSelection = getElementsWithinSelection(
           elements,
           draggingElement,
+          this.state.currentLayerId,
         );
         this.setState((prevState) =>
           selectGroupsForSelectedElements(
