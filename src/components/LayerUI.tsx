@@ -568,8 +568,7 @@ const LayerUI = ({
             setAppState({ currentLayerId: layerId });
           }}
           onRemove={(layerId) => {
-            if (appState.layers.length < 2) {
-              window.alert(t("alerts.removeLastLayer"));
+            if (layerId === "default") {
               return;
             }
 
@@ -577,9 +576,14 @@ const LayerUI = ({
               (layer) => layer.id !== layerId,
             );
 
+            var newCurrentLayer =
+              appState.currentLayerId === layerId
+                ? newLayersList[0].id
+                : appState.currentLayerId;
+
             setAppState({
               layers: newLayersList,
-              currentLayerId: newLayersList[0].id,
+              currentLayerId: newCurrentLayer,
             });
           }}
         />

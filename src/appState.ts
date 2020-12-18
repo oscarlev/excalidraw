@@ -68,8 +68,8 @@ export const getDefaultAppState = (): Omit<
     width: window.innerWidth,
     height: window.innerHeight,
     isLibraryOpen: false,
-    currentLayerId: "1",
-    layers: [{ id: "1", label: "Layer 1" }],
+    currentLayerId: "default",
+    layers: [{ id: "default", label: "Default" }],
   };
 };
 
