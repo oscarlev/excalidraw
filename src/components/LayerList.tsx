@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Layer } from "../types";
 import { trash } from "./icons";
 import { ToolButton } from "./ToolButton";
@@ -14,26 +14,30 @@ export const LayerList = ({
   onRemove: (id: string) => void;
   layers: Layer[];
   currentLayerId: string;
-}) => (
-  <div className="layer-item-list">
-    {layers.map((layer) => (
-      <div
-        className={`layer-item ${
-          currentLayerId === layer.id && "layer-item-active"
-        }`}
-        key={layer.id}
-        onClick={() => onSelect(layer.id)}
-      >
-        <div>{layer.label}</div>
-        <ToolButton
-          type="button"
-          icon={trash}
-          title={t("buttons.removeLayer")}
-          aria-label={t("buttons.removeLayer")}
-          className="removelayerbutton"
-          onClick={() => onRemove(layer.id)}
-        />
-      </div>
-    ))}
-  </div>
-);
+}) => {
+  const items = useMemo(() => layers.reverse(), [layers]);
+
+  return (
+    <div className="layer-item-list">
+      {items.map((layer) => (
+        <div
+          className={`layer-item ${
+            currentLayerId === layer.id && "layer-item-active"
+          }`}
+          key={layer.id}
+          onClick={() => onSelect(layer.id)}
+        >
+          <div>{layer.label}</div>
+          <ToolButton
+            type="button"
+            icon={trash}
+            title={t("buttons.removeLayer")}
+            aria-label={t("buttons.removeLayer")}
+            className="removelayerbutton"
+            onClick={() => onRemove(layer.id)}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
