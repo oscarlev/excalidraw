@@ -309,6 +309,52 @@ button,
   max-height: calc(100vh - 236px);
 }
 
+// ----------------
+// Layers
+// ----------------
+
+.App-menu_layers {
+  position: absolute;
+  bottom: 50px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  z-index: 100;
+  width: 250px;
+  padding: 8px;
+}
+
+.layer-item-list > * {
+  border-top: 1px solid var(--button-gray-2);
+}
+
+.layer-item-list > *:last-child {
+  border-bottom: 1px solid var(--button-gray-2);
+}
+
+.layer-item {
+  cursor: pointer;
+  padding: 8px;
+}
+
+.layer-item-active {
+  background-color: var(--button-gray-2);
+}
+
+.addlayerbutton {
+  height: 30px;
+  align-self: center;
+  margin-top: 12px;
+}
+
+.removelayerbutton {
+  height: 25px;
+  width: 25px;
+}
+
+// ----------------
+
 .ErrorSplash {
   min-height: 100vh;
   padding: 20px 0;
@@ -417,34 +463,6 @@ button,
   }
   :root[dir="rtl"] & {
     left: 44px;
-  }
-}
-
-.addlayerbutton {
-  position: absolute;
-  bottom: 17px;
-  height: 25px;
-  width: 25px;
-
-  :root[dir="ltr"] & {
-    right: 290px;
-  }
-  :root[dir="rtl"] & {
-    left: 80px;
-  }
-}
-
-.removelayerbutton {
-  position: absolute;
-  bottom: 17px;
-  height: 25px;
-  width: 25px;
-
-  :root[dir="ltr"] & {
-    right: 260px;
-  }
-  :root[dir="rtl"] & {
-    left: 80px;
   }
 }
 

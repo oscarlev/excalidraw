@@ -21,7 +21,7 @@ import { LockIcon } from "./LockIcon";
 import { ExportDialog, ExportCB } from "./ExportDialog";
 import { LanguageList } from "./LanguageList";
 import { LayerList } from "./LayerList";
-import { trash, clone } from "../components/icons";
+import { trash, zoomIn } from "../components/icons";
 
 import { t, languages, setLanguage } from "../i18n";
 import { HintViewer } from "./HintViewer";
@@ -532,38 +532,34 @@ const LayerUI = ({
           languages={languages}
           floating
         />
-        <LayerList
-          currentLayerId={appState.currentLayerId}
-          layers={appState.layers}
-          onChange={(layerId) => {
-            deselectItems();
-            setAppState({ currentLayerId: layerId });
-          }}
-          floating
-        />
-        {newLayerModalIsShown && (
-          <NewLayerDialog
-            onAdd={(name) => {
-              const newLayer = {
-                id: randomId(),
-                label: name,
-              };
-              setAppState({ layers: [...appState.layers, newLayer] });
-              setNewLayerModalIsShown(false);
-            }}
-            onClose={() => setNewLayerModalIsShown(false)}
-          />
-        )}
-        <ToolButton
-          type="button"
-          icon={clone}
-          title={t("buttons.addLayer")}
-          aria-label={t("buttons.addLayer")}
-          className="addlayerbutton"
+        {actionManager.renderAction("toggleShortcuts")}
+      </div>
+      <button
+        className={`disable-zen-mode ${
+          zenModeEnabled && "disable-zen-mode--visible"
+        }`}
+        onClick={toggleZenMode}
+      >
+        {t("buttons.exitZenMode")}
+      </button>
+      {appState.scrolledOutside && (
+        <button
+          className="scroll-back-to-content"
           onClick={() => {
-            setNewLayerModalIsShown(true);
+            setAppState({
+              ...calculateScrollCenter(elements, appState, canvas),
+            });
           }}
-        />
+        >
+          {t("buttons.scrollBackToContent")}
+        </button>
+      )}
+    </footer>
+  );
+
+  const renderLayers = () => (
+    <>
+      <div className="App-menu_layers Island">
         <ToolButton
           type="button"
           icon={trash}
@@ -589,29 +585,40 @@ const LayerUI = ({
             }
           }}
         />
-        {actionManager.renderAction("toggleShortcuts")}
-      </div>
-      <button
-        className={`disable-zen-mode ${
-          zenModeEnabled && "disable-zen-mode--visible"
-        }`}
-        onClick={toggleZenMode}
-      >
-        {t("buttons.exitZenMode")}
-      </button>
-      {appState.scrolledOutside && (
-        <button
-          className="scroll-back-to-content"
-          onClick={() => {
-            setAppState({
-              ...calculateScrollCenter(elements, appState, canvas),
-            });
+        <LayerList
+          currentLayerId={appState.currentLayerId}
+          layers={appState.layers}
+          onChange={(layerId) => {
+            deselectItems();
+            setAppState({ currentLayerId: layerId });
           }}
-        >
-          {t("buttons.scrollBackToContent")}
-        </button>
+        />
+        <ToolButton
+          type="button"
+          icon={zoomIn}
+          title={t("buttons.addLayer")}
+          aria-label={t("buttons.addLayer")}
+          showAriaLabel={true}
+          className="addlayerbutton"
+          onClick={() => {
+            setNewLayerModalIsShown(true);
+          }}
+        />
+      </div>
+      {newLayerModalIsShown && (
+        <NewLayerDialog
+          onAdd={(name) => {
+            const newLayer = {
+              id: randomId(),
+              label: name,
+            };
+            setAppState({ layers: [newLayer, ...appState.layers] });
+            setNewLayerModalIsShown(false);
+          }}
+          onClose={() => setNewLayerModalIsShown(false)}
+        />
       )}
-    </footer>
+    </>
   );
 
   return isMobile ? (
@@ -653,6 +660,7 @@ const LayerUI = ({
           <GitHubCorner appearance={appState.appearance} />
         </aside>
       }
+      {renderLayers()}
       {renderFooter()}
     </div>
   );

@@ -5,24 +5,22 @@ export const LayerList = ({
   onChange,
   layers,
   currentLayerId,
-  floating,
 }: {
   onChange: (value: string) => void;
   layers: Layer[];
   currentLayerId: string;
-  floating?: boolean;
 }) => (
-  <select
-    className={`dropdown-select dropdown-select__layer${
-      floating ? " dropdown-select--floating" : ""
-    }`}
-    onChange={({ target }) => onChange(target.value)}
-    value={currentLayerId}
-  >
+  <div className="layer-item-list">
     {layers.map((layer) => (
-      <option key={layer.id} value={layer.id}>
+      <div
+        className={`layer-item ${
+          currentLayerId === layer.id && "layer-item-active"
+        }`}
+        key={layer.id}
+        onClick={() => onChange(layer.id)}
+      >
         {layer.label}
-      </option>
+      </div>
     ))}
-  </select>
+  </div>
 );
