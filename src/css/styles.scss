@@ -329,13 +329,16 @@ button,
   border-top: 1px solid var(--button-gray-2);
 }
 
-.layer-item-list > *:last-child {
-  border-bottom: 1px solid var(--button-gray-2);
+.layer-item-list > *:first-child {
+  border-top: none;
 }
 
 .layer-item {
   cursor: pointer;
   padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .layer-item-active {

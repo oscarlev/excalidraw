@@ -21,7 +21,7 @@ import { LockIcon } from "./LockIcon";
 import { ExportDialog, ExportCB } from "./ExportDialog";
 import { LanguageList } from "./LanguageList";
 import { LayerList } from "./LayerList";
-import { trash, zoomIn } from "../components/icons";
+import { zoomIn } from "../components/icons";
 
 import { t, languages, setLanguage } from "../i18n";
 import { HintViewer } from "./HintViewer";
@@ -560,37 +560,27 @@ const LayerUI = ({
   const renderLayers = () => (
     <>
       <div className="App-menu_layers Island">
-        <ToolButton
-          type="button"
-          icon={trash}
-          title={t("buttons.removeLayer")}
-          aria-label={t("buttons.removeLayer")}
-          className="removelayerbutton"
-          onClick={() => {
+        <LayerList
+          currentLayerId={appState.currentLayerId}
+          layers={appState.layers}
+          onSelect={(layerId) => {
+            deselectItems();
+            setAppState({ currentLayerId: layerId });
+          }}
+          onRemove={(layerId) => {
             if (appState.layers.length < 2) {
               window.alert(t("alerts.removeLastLayer"));
               return;
             }
 
-            if (window.confirm(t("alerts.confirmRemoveLayer"))) {
-              (window as any).handle = null;
-              const newLayersList = appState.layers.filter(
-                (layer) => layer.id !== appState.currentLayerId,
-              );
+            const newLayersList = appState.layers.filter(
+              (layer) => layer.id !== layerId,
+            );
 
-              setAppState({
-                layers: newLayersList,
-                currentLayerId: newLayersList[0].id,
-              });
-            }
-          }}
-        />
-        <LayerList
-          currentLayerId={appState.currentLayerId}
-          layers={appState.layers}
-          onChange={(layerId) => {
-            deselectItems();
-            setAppState({ currentLayerId: layerId });
+            setAppState({
+              layers: newLayersList,
+              currentLayerId: newLayersList[0].id,
+            });
           }}
         />
         <ToolButton

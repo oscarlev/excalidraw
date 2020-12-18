@@ -1,12 +1,17 @@
 import React from "react";
 import { Layer } from "../types";
+import { trash } from "./icons";
+import { ToolButton } from "./ToolButton";
+import { t } from "../i18n";
 
 export const LayerList = ({
-  onChange,
+  onSelect,
+  onRemove,
   layers,
   currentLayerId,
 }: {
-  onChange: (value: string) => void;
+  onSelect: (value: string) => void;
+  onRemove: (id: string) => void;
   layers: Layer[];
   currentLayerId: string;
 }) => (
@@ -17,9 +22,17 @@ export const LayerList = ({
           currentLayerId === layer.id && "layer-item-active"
         }`}
         key={layer.id}
-        onClick={() => onChange(layer.id)}
+        onClick={() => onSelect(layer.id)}
       >
-        {layer.label}
+        <div>{layer.label}</div>
+        <ToolButton
+          type="button"
+          icon={trash}
+          title={t("buttons.removeLayer")}
+          aria-label={t("buttons.removeLayer")}
+          className="removelayerbutton"
+          onClick={() => onRemove(layer.id)}
+        />
       </div>
     ))}
   </div>

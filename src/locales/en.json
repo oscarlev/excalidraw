@@ -118,8 +118,7 @@
     "decryptFailed": "Couldn't decrypt data.",
     "uploadedSecurly": "The upload has been secured with end-to-end encryption, which means that Excalidraw server and third parties can't read the content.",
     "loadSceneOverridePrompt": "Loading external drawing will replace your existing content. Do you wish to continue?",
-    "removeLastLayer": "You cant remove the last layer",
-    "confirmRemoveLayer": "Are you sure you want to remove the current layer?"
+    "removeLastLayer": "You cant remove the last layer"
   },
   "toolBar": {
     "selection": "Selection",
