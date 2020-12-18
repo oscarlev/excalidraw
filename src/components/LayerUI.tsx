@@ -606,7 +606,10 @@ const LayerUI = ({
               id: randomId(),
               label: name,
             };
-            setAppState({ layers: [...appState.layers, newLayer] });
+            setAppState({
+              layers: [...appState.layers, newLayer],
+              currentLayerId: newLayer.id,
+            });
             setNewLayerModalIsShown(false);
           }}
           onClose={() => setNewLayerModalIsShown(false)}
